@@ -3,9 +3,16 @@
 <div style="text-align:center">
   <h1>
     Create an offer to lend a hand
-    <img width="75" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
   </h1>
 </div>
 <br/>
-<h4>Offer Creation Form Goes below</h4>
-<p>We may want to use an offer class to create a template-driven form. Alternatively, we could try to learn about reactive forms</p>
+<form (submit)="onSubmit()">
+  <p>{{printedErrors[0]}}</p>
+  <p>{{printedErrors[1]}}</p>
+  <p>{{printedErrors[2]}}</p>
+   <p>Name:<input type="text" minlength="3" name="newStuff.Name" [(ngModel)]="newStuff.Name" /></p>
+   <p>Item:<input type="text" minlength="3" name="newStuff.Item_Name" [(ngModel)]="newStuff.Item_Name"  /></p>
+   <p>Item Quantity:<input type="number" name="newStuff.Item_Amount" [(ngModel)]="newStuff.Item_Amount"  /></p>
+   <p>Email:<input type="email" minlength="3" name="newStuff.Email" [(ngModel)]="newStuff.Email"  /></p>
+   <p><input type="submit" value="Add stuff" /><button [routerLink]="['']">Cancel</button></p>
+</form>

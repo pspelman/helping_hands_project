@@ -10,15 +10,14 @@ export class DataManagerService {
   //TODO: View Request
   getAllOffers() {
     //todo: update server file to contain this route, which will return a list of all active donation offers
-    return this._http.get('/offers');
+    return this._http.get('/donations');
 
   }
 
 
-  //TODO: Create Request
-  createDonationOffer(new_donation_offer: any) {
-    //todo: update server file to contain this route, which will create a NEW donation offer
-    return this._http.post('/donate', new_donation_offer)
+// Done - Mike
+  createDonationOffer(newStuff){
+    return this._http.post('/donations', newStuff)
   }
 
 

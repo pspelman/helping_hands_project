@@ -8,21 +8,32 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent implements OnInit {
+  newStuff: any;
+  errorStatus: any;
+  Status: any;
+  printedErrors: any;
+  overallStatus: any;
   private donation_offer: any;
 
   constructor(private _http: DataManagerService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.newStuff = {Name: "", Item_Name: "", Item_Amount: 0, Email: ""}
   }
 
 
   //FIXME: correct the behavior of the offer creation function
-  createNewOffer() {
-
-    let observable = this._http.createDonationOffer(this.donation_offer);
-    observable.subscribe(server_response => {
-      console.log(`Attempted to create donation. Server response: `, server_response);
-
-    });
-  }
+  onSubmit() {
+    let observable = this._http.createDonationOffer(this.newStuff);
+    observable.subscribe(data => {
+      console.log("Got data from post back", data);
+      this.printedErrors = data['errorStatus'];
+      const overallStatus = ('errorStatus' in data);
+      console.log("Below is the status")
+      console.log(overallStatus);
+      if(overallStatus != true){
+        this.router.navigateByUrl('');
+      }
+    })
+}
 }
