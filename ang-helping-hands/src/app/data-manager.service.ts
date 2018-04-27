@@ -1,6 +1,28 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 
+
+
+
+@Injectable()
+export class OfferModel {
+  donor_name: string;
+  donor_email: string;
+  item_name: string;
+  item_quantity: number;
+  item_details: string;
+
+  constructor(donor_name: string = "", donor_email: string = "", item_name: string ="", item_details: string="", item_quantity: number=0) {
+    this.donor_name = donor_name;
+    this.donor_email = donor_email;
+    this.item_name = item_name;
+    this.item_details = item_details;
+    this.item_quantity = item_quantity;
+
+  }
+
+}
+
 @Injectable()
 export class DataManagerService {
 
@@ -10,14 +32,14 @@ export class DataManagerService {
   //TODO: View Request
   getAllOffers() {
     //todo: update server file to contain this route, which will return a list of all active donation offers
-    return this._http.get('/donations');
+    return this._http.get('/offers');
 
   }
 
 
 // Done - Mike
-  createDonationOffer(newStuff){
-    return this._http.post('/donations', newStuff)
+  createDonationOffer(newOffer){
+    return this._http.post('/offers', newOffer)
   }
 
 
@@ -28,7 +50,7 @@ export class DataManagerService {
     return this._http.put(`/donations/${offer_id}`, offer_data); //returns observable
   }
 
-  //TODO: Claim Offer
+  //TODO: Claim OfferModel
   claimOffer(offer_id, requester_data) {
     //todo: update server file to contain this route, which will associate a requester's data (email) with the offer?
     return this._http.put(`/claim/${offer_id}`, requester_data);

@@ -1,69 +1,54 @@
 var mongoose = require('mongoose');
 // var uniqueValidator = require('mongoose-unique-validator');
 
-var skillLength = function (skill) {
-    return !(skill.length === 0 || skill.length > 2);
-};
-
-
-var SkillSchema = new mongoose.Schema({
-    skill: {
-        type: String,
-        minlength: 3
-    }
+var keywordSchema = new mongoose.Schema({
+    keyword_text: 'string',
 });
 
-//VALIDATION
-SkillSchema.pre('save', function (next) {
-    if ('invalid' === this.skill) {
-        return next(new Error('#sadpanda'));
+keywordSchema.pre('save', function (next) {
+    if (this.keyword_text.length < 3) {
+        return next(new Error('keywords must be more than 3 characters'));
     }
     next();
 });
-
-
-
-var skillSchema = new mongoose.Schema({ skill: 'string' });
-skillSchema.pre('save', function (next) {
-    if (this.skill.length > 0 && this.skill.length < 3) {
-        return next(new Error('#sadpanda, your skills must be at least 3 characters long!'));
-    }
-    next();
-});
-
 
 //Instruction says use only ONE schema
-var PetSchema = new mongoose.Schema({
-    pet_name: {
+var OfferSchema = new mongoose.Schema({
+    donor_name: {
         type: String,
         required: true,
         minlength: 3,
         unique: true
     },
-    type: {
+    donor_email: {
+        type: String,
+        required: true,
+        minlength: 3,
+        pattern:"^\\S+@\\S+$"
+    },
+    item_name: {
         type: String,
         required: true,
         minlength: 3
     },
-    description: {
+    item_details: {
         type: String,
-        required: true,
+        required: false,
         minlength: 3
     },
-    skills: [skillSchema],
-    likes: {
+    item_quantity: {
         type: Number,
-        default: 0
-    }
+        required: true,
+        min: 0
+    },
+    item_keywords: [keywordSchema]
 },{timestamps: true});
-// PetSchema.plugin(uniqueValidator);
-PetSchema.pre('save', function (next) {
-    if (this.skills.length > 3){
-        return next(new Error('you can only have 3 helping_hands_model skills'));
+OfferSchema.pre('save', function (next) {
+    if (this.item_keywords.length > 5){
+        return next(new Error('you can only have 5 keywords per item'));
     }
     next();
 });
 
-
-mongoose.model('HelpingHandsModel', PetSchema);
-var HelpingHandsModel = mongoose.model('HelpingHandsModel');
+mongoose.model('OfferModel', OfferSchema);
+var OfferModel = mongoose.model('OfferModel');

@@ -1,7 +1,11 @@
-<h1>
-  <input type="button" name="home" value="Home" class="btn" [routerLink]="['../home']" /> |
-  <input type="button" name="details" value="Post A Donation" class="btn" [routerLink]="['../create']" /> |
-  Helping Hands
-</h1>
-<router-outlet></router-outlet>
+<body>
+<div class="app_container">
+  <h1><button name="create" class="btn btn-dark home" [routerLink]="['home']" value="Home" >Home</button>
 
+    <!--<input type="button" name="home" value="Home" class="btn btn-outline-light" [routerLink]="['../home']" /> |-->
+    <input type="button" name="details" value="Post A Donation" class="btn btn-dark" [routerLink]="['../create']" /> |
+    Helping Hands
+  </h1>
+<router-outlet></router-outlet>
+</div>
+</body>

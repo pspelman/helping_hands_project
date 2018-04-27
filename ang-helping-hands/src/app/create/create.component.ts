@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DataManagerService} from "../data-manager.service";
+import { DataManagerService, OfferModel } from "../data-manager.service";
 import {ActivatedRoute, Router} from "@angular/router";
+
+
 
 @Component({
   selector: 'app-create',
@@ -8,32 +10,40 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./create.component.css']
 })
 export class CreateComponent implements OnInit {
-  newStuff: any;
   errorStatus: any;
   Status: any;
   printedErrors: any;
   overallStatus: any;
-  private donation_offer: any;
+  new_offer: OfferModel;
+  backend_errors: any;
+
+
 
   constructor(private _http: DataManagerService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    this.newStuff = {Name: "", Item_Name: "", Item_Amount: 0, Email: ""}
+    // this.newOffer = {Name: "", Item_Name: "", Item_Amount: 0, Email: ""}
+    this.new_offer = new OfferModel();
+
   }
 
 
   //FIXME: correct the behavior of the offer creation function
   onSubmit() {
-    let observable = this._http.createDonationOffer(this.newStuff);
+    let observable = this._http.createDonationOffer(this.new_offer);
     observable.subscribe(data => {
       console.log("Got data from post back", data);
       this.printedErrors = data['errorStatus'];
       const overallStatus = ('errorStatus' in data);
-      console.log("Below is the status")
-      console.log(overallStatus);
-      if(overallStatus != true){
+      console.log("Status: ", overallStatus);
+      if (overallStatus != true) {
         this.router.navigateByUrl('');
       }
-    })
-}
+    });
+  }
+
+  navHome() {
+    this.router.navigateByUrl('/home');
+  }
+
 }

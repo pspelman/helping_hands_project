@@ -1,18 +1,112 @@
-<!--<input type="button" name="home" value="Home" class="btn" [routerLink]="['../home']" />-->
+<h1>Create an offer to lend a hand
+</h1>
+  <form class="user_input_form" (submit)="onSubmit()" #new_offer_form="ngForm" onsubmit="return false" name="new_offer_form">
 
-<div style="text-align:center">
-  <h1>
-    Create an offer to lend a hand
-  </h1>
-</div>
-<br/>
-<form (submit)="onSubmit()">
-  <p>{{printedErrors[0]}}</p>
-  <p>{{printedErrors[1]}}</p>
-  <p>{{printedErrors[2]}}</p>
-   <p>Name:<input type="text" minlength="3" name="newStuff.Name" [(ngModel)]="newStuff.Name" /></p>
-   <p>Item:<input type="text" minlength="3" name="newStuff.Item_Name" [(ngModel)]="newStuff.Item_Name"  /></p>
-   <p>Item Quantity:<input type="number" name="newStuff.Item_Amount" [(ngModel)]="newStuff.Item_Amount"  /></p>
-   <p>Email:<input type="email" minlength="3" name="newStuff.Email" [(ngModel)]="newStuff.Email"  /></p>
-   <p><input type="submit" value="Add stuff" /><button [routerLink]="['']">Cancel</button></p>
+
+  <div class="alert alert-danger" *ngIf="(!donor_name.valid && !donor_name.untouched && donor_name.dirty);" >
+  <!--<div class="alert alert-danger" *ngIf="(!donor_name.valid && donor_name.dirty);" >-->
+    <div *ngIf="donor_name.errors.required">Blank titles are not allowed</div>
+    <div *ngIf="donor_name.errors.minlength">Movie titles must contain more than {{ donor_name.errors.minlength.requiredLength }} letters</div>
+  </div>
+  <div class="form-group">
+    <label for="donor_name">Your name:</label>
+    <input
+      id="donor_name"
+      type="text"
+      name="donor_name"
+      [(ngModel)]="new_offer.donor_name"
+      #donor_name="ngModel"
+      minlength="3"
+      required
+    />
+  </div>
+
+
+  <div class="alert alert-danger" *ngIf="(!donor_email.valid && !donor_email.untouched && donor_email.dirty);" >
+  <!--<div class="alert alert-danger" *ngIf="(!donor_email.valid && donor_email.dirty);" >-->
+    <div *ngIf="donor_email.errors.required">Contact email address is required</div>
+    <div *ngIf="donor_email.errors.minlength">Email has to be longer than {{ donor_email.errors.minlength.requiredLength }} letters</div>
+  </div>
+  <div class="form-group">
+    <label for="donor_email">Contact email:</label>
+    <input
+      id="donor_email"
+      type="email"
+      name="donor_email"
+      [(ngModel)]="new_offer.donor_email"
+      #donor_email="ngModel"
+      minlength="3"
+      required
+    />
+  </div>
+
+
+  <div class="alert alert-danger" *ngIf="(!item_name.valid && !item_name.untouched && item_name.dirty);" >
+  <!--<div class="alert alert-danger" *ngIf="(!item_name.valid && item_name.dirty);" >-->
+    <div *ngIf="item_name.errors.required">Blank item names are not allowed</div>
+    <div *ngIf="item_name.errors.minlength">Item names should be at least {{ item_name.errors.minlength.requiredLength }} letters</div>
+  </div>
+  <div class="form-group">
+    <label for="item_name">Item:</label>
+    <input
+      id="item_name"
+      type="text"
+      name="item_name"
+      [(ngModel)]="new_offer.item_name"
+      #item_name="ngModel"
+      minlength="3"
+      required
+    />
+  </div>
+
+
+    <div class="alert alert-danger" *ngIf="(!item_quantity.valid && !item_quantity.untouched && item_quantity.dirty);" >
+    <div *ngIf="item_quantity.errors.required">Must have a quantity</div>
+    <div *ngIf="item_quantity.errors.minlength">Quantity must be greater than {{ item_quantity.errors.min.required }} letters</div>
+  </div>
+  <div class="form-group">
+    <label for="item_quantity">Quantity:</label>
+    <input
+      id="item_quantity"
+      type="number"
+      name="item_quantity"
+      [(ngModel)]="new_offer.item_quantity"
+      #item_quantity="ngModel"
+      min="0"
+      required
+    />
+  </div>
+
+
+
+  <div class="alert alert-danger" *ngIf="(!item_details.valid && !item_details.untouched && item_details.dirty);" >
+    <!--<div *ngIf="item_details.errors.required"> reviews are not allowed</div>-->
+    <div *ngIf="item_details.errors.minlength">Reviews must contain more than {{ item_details.errors.minlength.requiredLength }} letters</div>
+  </div>
+  <div class="form-group">
+    <label for="item_details">Item Details</label>
+    <textarea
+      class="form-control"
+      id="item_details"
+      name="item_details"
+      [(ngModel)]="new_offer.item_details"
+      #item_details="ngModel"
+      minlength="3"
+
+    >
+
+    </textarea>
+  </div>
+
+  <button type="submit" [disabled]="!new_offer_form.form.valid" class="btn-outline-light" name="submit">Submit</button>
+  <button type="reset" class="btn-outline-light" name="reset" (click)="navHome()">Cancel</button>
+
+  <div *ngIf="backend_errors" class="alert-danger">
+    <p>There were errors with the movie registration:</p>
+    <div *ngFor="let err of backend_errors" class="alert-danger">
+      -> {{err}}
+    </div>
+  </div>
+
 </form>
+

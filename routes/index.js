@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 
-var HelpingHandsModel = mongoose.model('HelpingHandsModel');
-var HelpingHandsModels = mongoose.model('HelpingHandsModel');
+var OfferModel = mongoose.model('OfferModel');
+var OfferModels = mongoose.model('OfferModel');
 
 mongoose.Promise = global.Promise;
 
@@ -14,35 +14,39 @@ class errorObject {
     }
 }
 
+
 router.get('/', function (req, res) {
     console.log(`reached the router`,);
     res.sendFile(path.resolve("./public/dist/index.html"));
 });
 
 
-//DONE: router.get('/', function(req, res){}
-//get all helping_hands_models
-router.get('/helping_hands_models', function (req, res) {
+
+router.get('/offers', function (req, res) {
     let errs = new errorObject();
     let err_holder = [];
-    console.log(`arrived at GET helping_hands_models...getting all helping_hands_models`,);
-    HelpingHandsModels.find({}, function (err, helping_hands_models) {
-        if(err){
+    console.log(`arrived at GET offers...getting all offers`,);
+
+    OfferModels.find({}).
+    // sort({stars: 1}).exec(function (err, offers) {
+    exec(function (err, offers) {
+        if (err) {
             err_holder.push(err.message);
             errs.has_errors = true;
-            errs.err_list.push(err.message);
-            console.log(`there was an error looking up helping_hands_models`, err);
-            res.json({'message':'there was an error', 'errors': err.message, 'err_holder':err_holder, 'errs':errs})
+            errs.error_list.push(err.message);
+            console.log(`there was an error looking up offers`, err);
+            res.json({'message': 'there was an error', 'errors': err.message, 'err_holder': err_holder, 'errs': errs})
         } else {
-            res.json({'message': 'successfully retrieved helping_hands_models', 'helping_hands_models': helping_hands_models, 'errs':errs});
+            res.json({'message': 'successfully retrieved offers', 'offers': offers, 'errs': errs});
         }
     });
+
 });
 
 
-//DONE: router.get('/helping_hands_models/:id', function(req, res){}
+//DONE: router.get('/offers/:id', function(req, res){}
 //get a SINGLE author by ID
-router.get('/helping_hands_models/:id', function (req, res) {
+router.get('/offers/:id', function (req, res) {
     let errs = new errorObject();
     console.log(`req.body: `,req.body);
     let helping_hands_model_id = req.params.id;
@@ -50,7 +54,7 @@ router.get('/helping_hands_models/:id', function (req, res) {
     // res.json({'message':'working on it!'});
     //get the helping_hands_model
     var helpingHandsPromise = new Promise(function (resolve, reject) {
-        resolve(HelpingHandsModels.find({_id: req.params.id}));
+        resolve(OfferModel.find({_id: req.params.id}));
     })
         .then(function (helping_hands_model) {
             res.json({'message': 'successfully retrieved the helping_hands_model', 'helping_hands_model': helping_hands_model});
@@ -65,100 +69,87 @@ router.get('/helping_hands_models/:id', function (req, res) {
 });
 
 
-
-
-
-
-//DONE: router.post('/helping_hands_models', function(req, res){}
-//FIXME: backside validation errors - standardize the way they are sent back to the front
-//create a helping_hands_model
-router.post('/helping_hands_models', function (req, res) {
+router.post('/offers', function (req, res) {
     let errs = new errorObject();
     let err_holder = [];
     //new data recieved
     console.log(`request.body: `,req.body);
 
-    console.log(`   recieved request to make new helping_hands_model`,);
-    let helping_hands_model = new HelpingHandsModel();
+    console.log(`recieved request to make new movie`,);
 
-    if (req.body.helping_hands_model_name.length < 3) {
+    let new_offer = new OfferModel();
+
+
+    if(req.body.donor_name.length < 3){
         errs.has_errors = true;
-        errs.err_list.push("name must be at least 3 characters");
+        errs.err_list.push("Name Was Not Long Enough, Must Be More Than 3 characters")
     }
-    if (req.body.type.length < 3){
+
+    if(req.body.item_name.length < 3){
         errs.has_errors = true;
-        errs.err_list.push("type must be at least 3 characters");
+        errs.err_list.push("Item Name Was Not Long Enough, Must Be More Than 3 characters")
     }
-    if (req.body.description.length < 3){
+    if(req.body.donor_email.length < 3){
         errs.has_errors = true;
-        errs.err_list.push("description must be at least 3 characters");
+        customErrors.push("Email Was Not Long Enough, Must Be More Than 3 characters")
     }
 
-    helping_hands_model.helping_hands_model_name = req.body.helping_hands_model_name;;
-    helping_hands_model.type = req.body.type;
-    helping_hands_model.description = req.body.description;
-
-    let new_skills = req.body.skills;
-    console.log(`New skills`,new_skills);
-    console.log(`New skills length: `,new_skills.length);
-    // res.json({'message': 'Working on it'})
-
-    console.log(`HelpingHandsModel new_skills recieved:`,new_skills);
-    for(let i = 0; i < new_skills.length; i++){
-        if(new_skills[i] === null){
-            continue;
-        }
-        if (new_skills[i] && new_skills[i].length < 3) {
-            errs.has_errors = true;
-            errs.err_list.push('new_skills must be at least 3 characters');
-            break;
-        }
-        helping_hands_model.skills.push({skill: new_skills[i]});
-        var subdoc = helping_hands_model.skills[i];
-        console.log(`SKILL SUBDOC: `,subdoc);
-
+    if (req.body.item_details.length > 0 && req.body.item_details.length < 3 ){
+        errs.has_errors = true;
+        errs.err_list.push("Optional description must be more than 3 characters if included");
     }
 
-    helping_hands_model.save(function (err) {
-        if (err) {
-            // console.log(`there was an error saving to db`, err);
-            errs.has_errors = true;
-            errs.err_list.push(err.message);
-            console.log(`there were errors saving to db`, err.message );
-            res.json({'message': 'unable to save new helping_hands_model', 'errs': errs})
+    if (req.body.item_quantity < 1 ){
+        errs.has_errors = true;
+        errs.err_list.push("Quantity must be greater than zero");
+    }
 
-        } else {
-            console.log(`successfully saved!`);
-            res.json({'message': 'Saved new helping_hands_model!', 'errs': errs})
-        }
-    });
+    if (errs.has_errors) {
+        console.log(`errors!`,);
+        res.json({"message": "error trying to save new offer", "errs": errs});
+    } else {
+        new_offer.donor_name = req.body.donor_name;
+        new_offer.donor_email = req.body.donor_email;
+        new_offer.item_name = req.body.item_name;
+        new_offer.item_details = req.body.item_details;
+        new_offer.item_quantity = req.body.item_quantity;
 
+        new_offer.save(function (err) {
+            if (err) {
+                // console.log(`there was an error saving to db`, err);
+                errs.has_errors = true;
+                errs.error_list.push(err.message);
+                console.log(`there were errors saving to db`, err.message );
+                res.json({'message': 'unable to save new offer', 'errs': errs})
+            } else {
+                console.log(`successfully saved!`);
+                res.json({'message': 'Saved new offer!', 'errs': errs})
+            }
+        });
+    }
 });
 
 
 //TODO : function for liking helping_hands_model
 
-router.put('/helping_hands_models/like/:id', function (req, res) {
-    console.log(`like request: `, req.params._id);
+// router.put('/offers/like/:id', function (req, res) {
+//     console.log(`like req: `, req.params._id);
+//
+//
+//     OfferModel.findOneAndUpdate(
+//         { _id: req.params.id },
+//         {$inc: {likes: 1}}).exec(function(err, helping_hands_model_data) {
+//         if (err) {
+//             throw err;
+//         }
+//         else {
+//             console.log(helping_hands_model_data);
+//             res.json({'message': 'did the likes', 'helping_hands_model':helping_hands_model_data})
+//         }
+//     })
+// });
 
 
-    HelpingHandsModels.findOneAndUpdate(
-        { _id: req.params.id },
-        {$inc: {likes: 1}}).exec(function(err, helping_hands_model_data) {
-        if (err) {
-            throw err;
-        }
-        else {
-            console.log(helping_hands_model_data);
-            res.json({'message': 'did the likes', 'helping_hands_model':helping_hands_model_data})
-        }
-    })
-});
-
-
-
-//FIXME: standardize sending back errors
-//update an author's name
 router.put('/helping_hands_models/:id', function (req, res) {
     let errs = new errorObject();
     let err_holder = [];
@@ -167,7 +158,7 @@ router.put('/helping_hands_models/:id', function (req, res) {
 
 
     var opts = {runValidators: true , context: 'query'};
-    HelpingHandsModels.findOneAndUpdate({_id: req.params.id}, {
+    OfferModel.findOneAndUpdate({_id: req.params.id}, {
         helping_hands_model_name: req.body.helping_hands_model_name,
         type: req.body.type,
         description: req.body.description,
@@ -207,7 +198,7 @@ router.put('/add_helping_hands_model/:helping_hands_model_id', function (req, re
         res.json({'message':'done with the thing', 'author':helping_hands_model_id, 'errors': errors});
 
     } else {
-        HelpingHandsModels.find({_id: helping_hands_model_id}, function (err, author) {
+        OfferModel.find({_id: helping_hands_model_id}, function (err, author) {
             if (err) {
                 errors.push(err.message);
                 res.json({"message":"error adding quote", "errors":errors})
@@ -231,7 +222,7 @@ router.delete('/helping_hands_models/:id', function (req, res) {
     let helping_hands_model_id = req.params.id;
 
     console.log(`helping_hands_model: ${helping_hands_model_id}`);
-    HelpingHandsModels.remove({_id: req.params.id}, function (err) {
+    OfferModel.remove({_id: req.params.id}, function (err) {
         if (err) {
             errs.has_errors = true;
             errs.err_list.push(err);
@@ -257,7 +248,7 @@ router.all("/*", (req,res,next) => {
 
 
 function update_by_quote_sub_id(){
-    HelpingHandsModels.findOne({'quote._id': quoteId}).then(author => {
+    OfferModel.findOne({'quote._id': quoteId}).then(author => {
         let quote = author.quote.id(quoteId);
         quote.votes = 'something';
         return author.save();
@@ -274,8 +265,8 @@ function update_by_quote_sub_id(){
 var createSampleHelpingHandsModel = function () {
     let errs = new errorObject();
     let err_holder = [];
-    console.log(`trying to make a sample HelpingHandsModel`,);
-    var HelpingHandsModelInstance = new HelpingHandsModel();
+    console.log(`trying to make a sample OfferModel`,);
+    var HelpingHandsModelInstance = new OfferModel();
     // HelpingHandsModelInstance.helping_hands_model_name = 'Barney';
     // HelpingHandsModelInstance.type = 'cat';
     // HelpingHandsModelInstance.description = 'fat cat in Washington';

@@ -6,22 +6,26 @@
   </h1>
 </div>
 <p>Here's some text to try and break up the issue</p>
-<table style="border:1px solid black">
+<table class="table">
   <thead>
     <tr>
-        <th>Name</th>
-        <th>Item Avaliable</th>
-        <th>Number Available</th>
-        <th>Available Action</th>
+        <th>Item</th>
+      <th>Details</th>
+      <th>Quantity</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Available Action</th>
 
     </tr>
   </thead>
  <tbody>
-      <tr *ngFor="let item of Items; let i = index">
-          <td>{{item.Name}}</td>
-          <td>{{item.Item_Name}}</td>
-          <td>{{item.Item_Amount}}</td>
-          <td><button (click)="onClaim(item._id)" >Claim</button></td>
-      </tr>      
+      <tr *ngFor="let offer of all_offers; let i = index">
+        <td>{{offer.item_name}}</td>
+        <td>{{offer.item_details}}</td>
+        <td>{{offer.item_quantity}}</td>
+        <td>{{offer.donor_name}}</td>
+        <td>{{offer.donor_email}}</td>
+        <td><button (click)="onClaim(offer._id)" >Claim</button></td>
+      </tr>
   </tbody>
 </table>
