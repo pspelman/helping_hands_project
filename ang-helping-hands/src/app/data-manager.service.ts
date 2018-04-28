@@ -5,6 +5,27 @@ import {HttpClient} from "@angular/common/http";
 
 
 @Injectable()
+export class ClaimerModel {
+  claimer_name: string;
+  claimer_email: string;
+  claimer_note: string;
+  claimed_item: OfferModel;
+  item_quantity: number;
+
+
+  constructor(claimer_name: string = "", claimer_email: string = "", claimer_note: string ="", claimed_item: OfferModel=new OfferModel(), item_quantity: number=0) {
+    this.claimer_name = claimer_name;
+    this.claimer_email = claimer_email;
+    this.claimer_note = claimer_note;
+    this.claimed_item = claimed_item;
+    this.item_quantity = item_quantity;
+
+  }
+
+}
+
+
+@Injectable()
 export class OfferModel {
   donor_name: string;
   donor_email: string;
@@ -67,4 +88,12 @@ export class DataManagerService {
   }
 
 
+  getOfferById(offer_id) {
+    return this._http.get(`/offers/${offer_id}`);
+  }
+
+  submitClaimRequest(offer_id) {
+    console.log(`sending out claim request of offer #: ${offer_id}`,);
+    return this._http.delete(`offers/${offer_id}`);
+  }
 }

@@ -49,23 +49,20 @@ router.get('/offers', function (req, res) {
 router.get('/offers/:id', function (req, res) {
     let errs = new errorObject();
     console.log(`req.body: `,req.body);
-    let helping_hands_model_id = req.params.id;
-    console.log(`reached individual helping_hands_model lookup`,);
-    // res.json({'message':'working on it!'});
-    //get the helping_hands_model
-    var helpingHandsPromise = new Promise(function (resolve, reject) {
-        resolve(OfferModel.find({_id: req.params.id}));
-    })
-        .then(function (helping_hands_model) {
-            res.json({'message': 'successfully retrieved the helping_hands_model', 'helping_hands_model': helping_hands_model});
-        })
-        .catch(function (err) {
-            console.log(`caught err`, err);
+    console.log(`id: `,req.params.id);
+
+    let selected_offer = new OfferModel();
+
+    OfferModel.find({_id: req.params.id}, function (err, offer) {
+        if (err) {
             errs.has_errors = true;
             errs.err_list.push(err.message);
-            res.json({'message':'There was a problem with the request', 'err':err.message, 'errs':errs})
-        });
-
+            res.json({"message": "There were errors looking up offer info", "errs": errs});
+        } else {
+            console.log(`Found offer: `,offer);
+            res.json({"message": "found offer", "offer": offer, "errs": errs});
+        }
+    });
 });
 
 

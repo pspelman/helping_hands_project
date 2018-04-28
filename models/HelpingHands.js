@@ -12,6 +12,22 @@ keywordSchema.pre('save', function (next) {
     next();
 });
 
+//
+// var ClaimerSchema = new mongoose.Schema({
+//     claimer_name: {
+//         type: String,
+//         required: true,
+//         minlength: 3,
+//         unique: true
+//     },
+//     claimer_email: {
+//         type: String,
+//         required: true,
+//         minlength: 3,
+//         unique: true
+//     },
+// })
+
 //Instruction says use only ONE schema
 var OfferSchema = new mongoose.Schema({
     donor_name: {
@@ -26,6 +42,12 @@ var OfferSchema = new mongoose.Schema({
         minlength: 3,
         pattern:"^\\S+@\\S+$"
     },
+    // claimer: {
+    //     type: String,
+    //     required: true,
+    //     minlength: 3,
+    //     pattern:"^\\S+@\\S+$"
+    // },
     item_name: {
         type: String,
         required: true,

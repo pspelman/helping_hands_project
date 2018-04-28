@@ -1,0 +1,100 @@
+<!--<h2>Offer ID: {{offer_id}}<h2>-->
+
+  <h4>Item to be claimed:</h4>
+  <h3>- {{selected_offer.item_name}}</h3>
+
+  <br/>
+  <h3>Contact information:</h3>
+  <form class="user_input_form" (submit)="submitClaimRequest(offer_id)" #offer_claim_form="ngForm" onsubmit="return false" name="offer_claim_form">
+    <div class="alert alert-danger" *ngIf="(!claimer_name.valid && !claimer_name.untouched && claimer_name.dirty);" >
+      <!--<div class="alert alert-danger" *ngIf="(!claimer_name.valid && claimer_name.dirty);" >-->
+      <div *ngIf="claimer_name.errors.required">Blank titles are not allowed</div>
+      <div *ngIf="claimer_name.errors.minlength">Movie titles must contain more than {{ claimer_name.errors.minlength.requiredLength }} letters</div>
+    </div>
+    <div class="form-group">
+      <label for="claimer_name">Your name:</label>
+      <input
+        id="claimer_name"
+        type="text"
+        name="claimer_name"
+        [(ngModel)]="new_claim.claimer_name"
+        #claimer_name="ngModel"
+        minlength="3"
+        required
+      />
+    </div>
+
+
+    <div class="alert alert-danger" *ngIf="(!claimer_email.valid && !claimer_email.untouched && claimer_email.dirty);" >
+      <!--<div class="alert alert-danger" *ngIf="(!claimer_email.valid && claimer_email.dirty);" >-->
+      <div *ngIf="claimer_email.errors.required">Contact email address is required</div>
+      <div *ngIf="claimer_email.errors.minlength">Email has to be longer than {{ claimer_email.errors.minlength.requiredLength }} letters</div>
+    </div>
+    <div class="form-group">
+      <label for="claimer_email">Contact email:</label>
+      <input
+        id="claimer_email"
+        type="email"
+        name="claimer_email"
+        [(ngModel)]="new_claim.claimer_email"
+        #claimer_email="ngModel"
+        minlength="3"
+        required
+      />
+    </div>
+
+
+
+    <div class="alert alert-danger" *ngIf="(!claimer_note.valid && !claimer_note.untouched && claimer_note.dirty);" >
+      <!--<div *ngIf="claimer_note.errors.required"> reviews are not allowed</div>-->
+      <div *ngIf="claimer_note.errors.minlength">Reviews must contain more than {{ claimer_note.errors.minlength.requiredLength }} letters</div>
+    </div>
+    <div class="form-group">
+      <label for="claimer_note">Comments (optional)</label>
+      <textarea
+        class="form-control"
+        id="claimer_note"
+        name="claimer_note"
+        [(ngModel)]="new_claim.claimer_note"
+        #claimer_note="ngModel"
+        minlength="3"
+
+      >
+
+    </textarea>
+    </div>
+
+
+
+    <!--<div class="alert alert-danger" *ngIf="(!item_quantity.valid && !item_quantity.untouched && item_quantity.dirty);" >-->
+      <!--<div *ngIf="item_quantity.errors.required">Must have a quantity</div>-->
+      <!--<div *ngIf="item_quantity.errors.minlength">Quantity must be greater than {{ item_quantity.errors.min.required }} letters</div>-->
+    <!--</div>-->
+    <!--<div class="form-group">-->
+      <!--<label for="item_quantity">Quantity:</label>-->
+      <!--<input-->
+        <!--id="item_quantity"-->
+        <!--type="number"-->
+        <!--name="item_quantity"-->
+        <!--[(ngModel)]="new_claim.item_quantity"-->
+        <!--#item_quantity="ngModel"-->
+        <!--min="0"-->
+        <!--required-->
+      <!--/>-->
+    <!--</div>-->
+
+
+
+
+    <button type="submit" [disabled]="!offer_claim_form.form.valid" class="btn-outline-light" name="submit">Submit</button>
+    <button type="reset" class="btn-outline-light" name="reset" (click)="navHome()">Cancel</button>
+
+    <div *ngIf="backend_errors" class="alert-danger">
+      <p>There were errors submitting your information:</p>
+      <div *ngFor="let err of backend_errors" class="alert-danger">
+        -> {{err}}
+      </div>
+    </div>
+
+  </form>
+

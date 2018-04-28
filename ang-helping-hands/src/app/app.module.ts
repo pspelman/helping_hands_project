@@ -10,13 +10,15 @@ import {DataManagerService} from "./data-manager.service";
 import {RouterModule} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import { ClaimsComponent } from './claims/claims.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    CreateComponent
+    CreateComponent,
+    ClaimsComponent
   ],
   imports: [
     BrowserModule,

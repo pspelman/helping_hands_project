@@ -3,15 +3,16 @@
 
 body{
   background-color: #000028;
-  color: #faf1ff;
+  color: #a6ccc1;
 }
 
 h1, h2{
   /*text-shadow: 2px 2px 10px greenyellow;*/
   /*text-shadow: 2px 2px 1px greenyellow;*/
-  text-shadow: 2px 2px 1px #ff5338;
+  text-shadow: 2px 2px 1px rgba(255, 83, 56, 0.62);
 
 }
+
 
 .app_container {
   padding: 5%;

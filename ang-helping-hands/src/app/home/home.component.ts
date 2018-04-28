@@ -38,4 +38,8 @@ items: Array<any> = [];
   }
 
 
+  getClaim(offer_id: any) {
+    this.router.navigateByUrl(`/claims/${offer_id}`);
+
+  }
 }
